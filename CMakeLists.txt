@@ -3,4 +3,4 @@ project(skip_list C)
 
 set(CMAKE_C_STANDARD 99)
 
-add_executable(skip_list main.c SkipList.h)
+add_executable(skip_list main.c SkipList.h SkipList.c)

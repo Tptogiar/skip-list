@@ -7,7 +7,7 @@
 #include <malloc.h>
 #include <cstring>
 
-static struct SkipListNode* skipListNodeCreate(int level,int key,int value){
+static struct SkipListNode* skipListCreateNode(int level, int key, int value){
 
     struct SkipListNode *node = NULL;
     node = malloc(sizeof(*node) + level * sizeof(node));
@@ -22,6 +22,20 @@ static struct SkipListNode* skipListNodeCreate(int level,int key,int value){
 }
 
 
-
+struct SkipList* skipListCreate(int maxLevel){
+    struct SkipList* list = NULL;
+    list = malloc(sizeof(*list));
+    if(list==NULL){
+        return NULL;
+    }
+    list->level = 1;
+    list->nodeCount = 0;
+    list->head = skipListCreateNode(maxLevel,0,0);
+    if(list->head == NULL){
+        free(list);
+        return NULL;
+    }
+    return list;
+}
 
 

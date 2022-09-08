@@ -39,3 +39,61 @@ struct SkipList* skipListCreate(int maxLevel){
 }
 
 
+static int skipListGetLevel(struct SkipList* list){
+    int i = 0 ;
+    int level = 1;
+    for (int j = 0; j < list->head->maxLevel; ++j) {
+        if((rand()%2) == 1){
+            level++;
+        }
+    }
+    return level;
+}
+
+
+int skipListInsertNode(struct SkipList* list, int key, int value){
+    struct SkipListNode** update = NULL;
+    struct SkipListNode* cur = NULL;
+    struct SkipListNode* prev = NULL;
+    struct SkipListNode* insert = NULL;
+    int i = 0;
+    int level = 0;
+
+    if(list == NULL){
+        return -1;
+    }
+
+    update = (struct SkipListNode**) malloc(sizeof(list->head->maxLevel * sizeof(struct SkipListNode*)));
+    if(update == NULL){
+        return -2;
+    }
+
+    prev = list->head;
+    i = list->level -1;
+    for(;i>=0;i--){
+        while (((cur=prev->next[i]) != NULL) && (cur->key < key) ){
+            prev = cur;
+        }
+        update[i] = prev;
+    }
+    if ( (cur != NULL) && (cur->key == key)){
+        return -3;
+    }
+    level = skipListGetLevel(list);
+    insert = skipListCreateNode(level,key,value);
+    if(level > list->level){
+        for (int j = list->level; j < level ; ++j) {
+            update[j] = list->head;
+        }
+        list->level = level;
+    }
+
+    for (int i = 0; i < level ; ++i) {
+        insert->next[i] = update[i]->next[i];
+        update[i]->next[i] = insert;
+    }
+
+    list->nodeCount++;
+
+    return 0;
+}
